@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class EmpresasController
-{
+public class EmpresasController {
     @Autowired
     private EmpresasService empresasService;
 
+    /**
+     * Endpoint para obtener empresas
+     */
     @GetMapping("/Empresas")
-    public ResponseEntity<List<Empresas>> obtenerEmpresas()
-    {
+    public ResponseEntity<List<Empresas>> obtenerEmpresas() {
         List<Empresas> empresas = empresasService.getAllEmpresas();
         return ResponseEntity.ok(empresas);
     }

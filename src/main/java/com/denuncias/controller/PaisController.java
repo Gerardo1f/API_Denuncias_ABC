@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class PaisController
-{
+public class PaisController {
     @Autowired
     private PaisService paisService;
 
+    /**
+     * Endpoint para obtener Paises
+     */
     @GetMapping("/Pais")
-    public ResponseEntity<List<Pais>> obtenerPais()
-    {
+    public ResponseEntity<List<Pais>> obtenerPais() {
         List<Pais> Pais = paisService.getAllPais();
         return ResponseEntity.ok(Pais);
     }

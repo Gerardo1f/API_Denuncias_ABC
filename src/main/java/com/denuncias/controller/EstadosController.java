@@ -11,14 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class EstadosController
-{
+public class EstadosController {
     @Autowired
     private EstadosService estadosService;
 
+    /**
+     * Endpoint para obtener Estados por pais
+     */
     @GetMapping("/Estados/{idPais}")
-    public ResponseEntity<List<String>> obtenerEstadosPorPais(@PathVariable Long idPais)
-    {
+    public ResponseEntity<List<String>> obtenerEstadosPorPais(@PathVariable Long idPais) {
         List<String> estados = estadosService.getEstadosByIdPais(idPais);
         return ResponseEntity.ok(estados);
     }

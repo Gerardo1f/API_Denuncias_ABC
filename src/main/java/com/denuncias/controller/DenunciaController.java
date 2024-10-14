@@ -1,14 +1,13 @@
 package com.denuncias.controller;
 
 import com.denuncias.model.Denuncia;
-import com.denuncias.request.EstatusRequest;
 import com.denuncias.service.DenunciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/denuncias")
@@ -18,43 +17,67 @@ public class DenunciaController {
     private DenunciaService denunciaService;
 
 
-    // Endpoint para obtener una denuncia por ID
-    @GetMapping("/{folio}")
-    public ResponseEntity<Denuncia> obtenerDenunciaPorId(@PathVariable String folio) {
-        Optional<Denuncia> denuncia = denunciaService.obtenerDenunciaPorId(folio);
-        return denuncia.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    /**
+     * Endpoint para obtener la lista de denuncias
+     */
+    @GetMapping
+    public ResponseEntity<List<Denuncia>> obtenerListaDenuncias() {
+        List<Denuncia> denuncias = denunciaService.obtenerTodasLasDenuncias();
+        return ResponseEntity.ok(denuncias);
     }
 
-    // Endpoint para obtener una denuncia por folio y contraseña (seguimiento)
-    @GetMapping("/seguimiento")
-    public ResponseEntity<Denuncia> obtenerDenunciaPorFolioYPassword(@RequestParam String folio, @RequestParam String password) {
-        Optional<Denuncia> denuncia = denunciaService.obtenerDenunciaPorFolioYPassword(folio, password);
-        return denuncia.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
-    // Endpoint para registrar una nueva denuncia
+    /**
+     * Endpoint para registrar una nueva denuncia
+     */
     @PostMapping("/registrar")
     public ResponseEntity<Denuncia> registrarDenuncia(@RequestBody Denuncia denuncia) {
         Denuncia nuevaDenuncia = denunciaService.registrarDenuncia(denuncia);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaDenuncia);
     }
 
-    // Endpoint para actualizar el estatus de una denuncia
+    /**
+     * Endpoint para actualizar el estatus de una denuncia
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Denuncia> actualizarDenuncia(@PathVariable Long id, @RequestBody Denuncia actualizacion) {
         Denuncia denunciaActualizada = denunciaService.actualizarDenuncia(id, actualizacion);
         return ResponseEntity.ok(denunciaActualizada);
     }
 
+    /**
+     * Obtener comentarios de una denuncia
+     */
     @GetMapping("/obtener-comentarios/{id}")
-    public ResponseEntity<Denuncia>getDenunciaById(@PathVariable Long id)
-    {
+    public ResponseEntity<Denuncia> getDenunciaById(@PathVariable Long id) {
         return denunciaService.obtenerDenunciaById(id);
     }
 
+    /**
+     * Endpoint para cambiar el estatus de una denuncia
+     */
     @PutMapping("/{id}/estatus")
-    public ResponseEntity<Denuncia> cambiarEstatus(@PathVariable Long id, @RequestBody EstatusRequest request) {
-        Denuncia denunciaActualizada = denunciaService.cambiarEstatus(id, request.getEstatusId());
+    public ResponseEntity<Denuncia> cambiarEstatus(@PathVariable Long id, @RequestBody Long estatusId) {
+        Denuncia denunciaActualizada = denunciaService.cambiarEstatus(id, estatusId);
         return ResponseEntity.ok(denunciaActualizada);
     }
+
+    /**
+     * Endpoint para obtener el detalle de una denuncia por su ID
+     */
+    @GetMapping("/detalle/{id}")
+    public ResponseEntity<Denuncia> obtenerDenunciaPorId(@PathVariable Long id) {
+        Denuncia denuncia = denunciaService.obtenerDenunciaPorId(id);
+        return ResponseEntity.ok(denuncia);
+    }
+
+    /**
+     * Endpoint para seguir una denuncia usando folio y contraseña denunciante
+     */
+    @GetMapping("/seguir")
+    public ResponseEntity<Denuncia> seguirDenuncia(@RequestParam String folio, @RequestParam String password) {
+        Denuncia denuncia = denunciaService.seguirDenuncia(folio, password);
+        return ResponseEntity.ok(denuncia);
+    }
+
+
 }
