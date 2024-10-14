@@ -1,7 +1,9 @@
 package com.denuncias.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -19,5 +21,4 @@ public class Usuario {
     @Column(nullable = false, length = 50, columnDefinition = "varchar(50) default 'ADMIN'")
     private String rol = "ADMIN";
 
-    // Getters y Setters
 }
